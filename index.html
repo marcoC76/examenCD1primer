@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Examen de Computación · CD1</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #070a11;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-strong: #0d1320;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --text: #e8edf7;
+    --muted: #98a5bb;
+    --accent: #4f8cff;
+    --accent-2: #22d3ee;
+    --ok: #34d399;
+    --err: #f87171;
+    --radius: 16px;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font);
+    color: var(--text);
+    line-height: 1.55;
+    background:
+      radial-gradient(1100px 600px at 12% -10%, rgba(79, 140, 255, 0.16), transparent 60%),
+      radial-gradient(900px 520px at 100% 0%, rgba(34, 211, 238, 0.09), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(99, 102, 241, 0.12), transparent 60%),
+      var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 52px 52px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 75%);
+  }
+
+  [hidden] { display: none !important; }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .shell {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px 72px;
+  }
+
+  .view { animation: rise 0.35s ease both; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 18px;
+    padding: 6px 12px;
+    border: 1px solid rgba(79, 140, 255, 0.32);
+    border-radius: 999px;
+    background: rgba(79, 140, 255, 0.10);
+    color: #a9c4ff;
+    font-size: 0.74rem;
+    font-weight: 650;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.9);
+  }
+
+  .start-card {
+    max-width: 660px;
+    margin: 6vh auto 0;
+    padding: 40px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 5.4vw, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    font-weight: 750;
+    background: linear-gradient(120deg, #ffffff 15%, #b9c9f5 65%, #7fe4f4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitulo {
+    margin: 0 0 26px;
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 52ch;
+  }
+
+  .reglas {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 30px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reglas li {
+    position: relative;
+    padding: 11px 14px 11px 40px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
+    color: #c6d2e6;
+    font-size: 0.92rem;
+  }
+
+  .reglas li::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 0 12px rgba(79, 140, 255, 0.6);
+  }
+
+  .campo { margin-bottom: 8px; }
+
+  .campo label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #aab8d0;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: rgba(4, 8, 16, 0.6);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  input[type="text"]::placeholder { color: #6f7d93; }
+
+  input[type="text"]:focus {
+    outline: none;
+    border-color: rgba(79, 140, 255, 0.8);
+    box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.16);
+  }
+
+  .error {
+    margin: 8px 0 0;
+    color: #fca5a5;
+    font-size: 0.86rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 14px 24px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.97rem;
+    font-weight: 650;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f8cff, #3b6fe0);
+    box-shadow: 0 14px 30px -14px rgba(79, 140, 255, 0.85);
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  }
+
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 18px 34px -14px rgba(79, 140, 255, 0.9); }
+  .btn:active { transform: translateY(0); }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 3px;
+  }
+
+  .btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-secundario {
+    background: transparent;
+    color: #c8d4e8;
+    border-color: var(--border-strong);
+    box-shadow: none;
+  }
+
+  .btn-secundario:hover {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+
+  .btn-ancho { width: 100%; margin-top: 22px; }
+
+  .nota {
+    margin: 16px 0 0;
+    color: #7e8ca3;
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
+  .barra-superior {
+    position: sticky;
+    top: 12px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    margin-bottom: 22px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(10, 15, 26, 0.82);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+  }
+
+  .alumno { min-width: 0; }
+
+  .alumno .etiqueta {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7f8ea6;
+  }
+
+  .alumno .nombre {
+    display: block;
+    max-width: 46vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.98rem;
+    font-weight: 650;
+    color: #eaf0fb;
+  }
+
+  .reloj {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.045);
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    color: #cfe0ff;
+  }
+
+  .reloj::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.9);
+  }
+
+  .progreso { margin-bottom: 22px; }
+
+  .progreso-texto {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+    color: #93a1b8;
+  }
+
+  .progreso-texto strong {
+    color: #dbe5f6;
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+  }
+
+  .barra {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+  }
+
+  .barra-relleno {
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    box-shadow: 0 0 16px rgba(79, 140, 255, 0.5);
+    transition: width 0.28s ease;
+  }
+
+  .q {
+    margin: 0 0 14px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .q-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .q-num {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #7fa4ef;
+  }
+
+  .q-level {
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+
+  .level-basico { color: #7fe7d0; background: rgba(45, 212, 191, 0.10); border-color: rgba(45, 212, 191, 0.28); }
+  .level-intermedio { color: #9bc0ff; background: rgba(79, 140, 255, 0.10); border-color: rgba(79, 140, 255, 0.28); }
+  .level-avanzado { color: #c7b3ff; background: rgba(139, 108, 255, 0.12); border-color: rgba(139, 108, 255, 0.3); }
+
+  .q-text {
+    margin: 0 0 16px;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #edf2fc;
+  }
+
+  .opciones { display: grid; gap: 8px; }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .opt:hover {
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  .opt:focus-within {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
+  }
+
+  .opt input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .letra {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #a3b1c8;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .opt-texto {
+    font-size: 0.94rem;
+    color: #c9d4e7;
+  }
+
+  .opt.is-selected {
+    border-color: rgba(79, 140, 255, 0.65);
+    background: rgba(79, 140, 255, 0.12);
+  }
+
+  .opt.is-selected .letra {
+    background: linear-gradient(135deg, var(--accent), #3b6fe0);
+    border-color: transparent;
+    color: #ffffff;
+  }
+
+  .opt.is-selected .opt-texto { color: #f0f5ff; }
+
+  .entregar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+
+  .ayuda {
+    margin: 0;
+    color: #8a98af;
+    font-size: 0.86rem;
+  }
+
+  .resultado-card {
+    max-width: 680px;
+    margin: 4vh auto 0;
+    padding: 40px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .resultado-card.pass { --ring-color: var(--ok); }
+  .resultado-card.fail { --ring-color: var(--err); }
+
+  .anillo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 168px;
+    height: 168px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: conic-gradient(var(--ring-color) calc(var(--p) * 1%), rgba(255, 255, 255, 0.07) 0);
+    box-shadow: 0 0 42px -12px var(--ring-color);
+  }
+
+  .anillo::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    background: #0a0f1a;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  .anillo-centro {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    line-height: 1;
+  }
+
+  .anillo-centro strong {
+    font-size: 3rem;
+    font-weight: 750;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+  }
+
+  .anillo-centro span {
+    font-size: 1rem;
+    color: #93a1b8;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .estado {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .pass .estado { color: #86efac; background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.35); }
+  .fail .estado { color: #fca5a5; background: rgba(248, 113, 113, 0.12); border: 1px solid rgba(248, 113, 113, 0.35); }
+
+  .resultado-card h2 {
+    margin: 0 0 8px;
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    letter-spacing: -0.03em;
+  }
+
+  .resultado-nombre {
+    margin: 0 0 22px;
+    color: #9dabc2;
+    font-size: 0.95rem;
+  }
+
+  .estadisticas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 24px;
+  }
+
+  .dato {
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .dato span {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7f8ea6;
+  }
+
+  .dato strong {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #eef4ff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mensaje {
+    margin: 0 0 8px;
+    color: #b9c6da;
+    font-size: 0.96rem;
+  }
+
+  .mensaje-secundario {
+    margin: 0 0 26px;
+    color: #7e8ca3;
+    font-size: 0.85rem;
+  }
+
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 620px) {
+    .shell { padding: 20px 14px 56px; }
+    .start-card, .resultado-card { padding: 26px 20px; border-radius: 18px; }
+    .barra-superior { top: 8px; }
+    .alumno .nombre { max-width: 38vw; }
+    .q { padding: 16px; }
+    .entregar { flex-direction: column; align-items: stretch; }
+    .entregar .btn { width: 100%; }
+    .acciones .btn { width: 100%; }
+    .anillo { width: 148px; height: 148px; }
+    .anillo-centro strong { font-size: 2.6rem; }
+    .estadisticas { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <section class="view" id="vista-inicio" aria-labelledby="inicio-titulo">
+    <div class="start-card">
+      <p class="eyebrow">Evaluación de Computación · CD1</p>
+      <h1 id="inicio-titulo">Examen de Computación</h1>
+      <p class="subtitulo">Primer parcial. Se seleccionan 10 preguntas al azar de un banco de 30. Necesitas acertar las 10 para aprobar.</p>
+
+      <ul class="reglas">
+        <li>10 preguntas de opción múltiple seleccionadas al azar en cada intento.</li>
+        <li>Se exige 10 de 10 respuestas correctas para aprobar.</li>
+        <li>Si no aciertas todas, se genera una nueva selección de 10 preguntas.</li>
+        <li>El tiempo se cronometra desde que comienzas hasta que entregas.</li>
+      </ul>
+
+      <form id="form-inicio" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre del alumno</label>
+          <input type="text" id="nombre" name="nombre" maxlength="60" autocomplete="name" placeholder="Escribe tu nombre completo" />
+          <p class="error" id="nombre-error" role="alert" hidden>Escribe tu nombre para comenzar el examen.</p>
+        </div>
+        <button type="submit" class="btn btn-ancho">Comenzar examen</button>
+      </form>
+      <p class="nota">Las opciones de respuesta también se ordenan al azar en cada intento.</p>
+    </div>
+  </section>
+
+  <section class="view" id="vista-examen" aria-labelledby="examen-titulo" hidden>
+    <header class="barra-superior">
+      <div class="alumno">
+        <span class="etiqueta">Alumno</span>
+        <span class="nombre" id="alumno-nombre"></span>
+      </div>
+      <div class="reloj" role="timer" aria-live="off" aria-label="Tiempo transcurrido">
+        <span id="reloj">00:00</span>
+      </div>
+    </header>
+
+    <h2 class="sr-only" id="examen-titulo" tabindex="-1">Examen en curso</h2>
+
+    <div class="progreso">
+      <div class="progreso-texto">
+        <span>Progreso</span>
+        <span><strong id="contador">0 de 10</strong> respondidas</span>
+      </div>
+      <div class="barra" role="progressbar" aria-label="Preguntas respondidas" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="barra">
+        <div class="barra-relleno" id="barra-relleno"></div>
+      </div>
+    </div>
+
+    <form id="form-examen">
+      <div id="preguntas"></div>
+      <div class="entregar">
+        <p class="ayuda" id="ayuda" aria-live="polite">Responde las 10 preguntas para poder entregar.</p>
+        <button type="submit" class="btn" id="btn-entregar" disabled>Entregar examen</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="view" id="vista-resultado" aria-labelledby="resultado-titulo" hidden>
+    <div class="resultado-card" id="resultado-card">
+      <div class="anillo" id="anillo" style="--p: 0">
+        <div class="anillo-centro">
+          <strong id="puntaje">0</strong>
+          <span>/ 10</span>
+        </div>
+      </div>
+      <p class="estado" id="estado">Reprobado</p>
+      <h2 id="resultado-titulo" tabindex="-1">Resultado del examen</h2>
+      <p class="resultado-nombre" id="resultado-nombre"></p>
+
+      <div class="estadisticas">
+        <div class="dato">
+          <span>Aciertos</span>
+          <strong id="dato-aciertos">0 / 10</strong>
+        </div>
+        <div class="dato">
+          <span>Tiempo</span>
+          <strong id="dato-tiempo">00:00</strong>
+        </div>
+      </div>
+
+      <p class="mensaje" id="resultado-mensaje"></p>
+      <p class="mensaje-secundario" id="resultado-detalle"></p>
+
+      <div class="acciones">
+        <button type="button" class="btn" id="btn-reintentar">Intentar de nuevo</button>
+        <button type="button" class="btn btn-secundario" id="btn-inicio">Volver al inicio</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const banco = [
+    {
+      id: 1,
+      nivel: "Básico",
+      pregunta: "¿Cuál es el componente del hardware considerado el “cerebro” de la computadora, encargado de organizar y ejecutar las instrucciones de los programas?",
+      opciones: [
+        "Disco Duro",
+        "Memoria RAM",
+        "Unidad Central de Procesamiento (CPU)",
+        "Tarjeta Madre"
+      ],
+      correcta: 2
+    },
+    {
+      id: 2,
+      nivel: "Básico",
+      pregunta: "Dispositivos como el teclado y el ratón (mouse) pertenecen a la categoría de:",
+      opciones: [
+        "Dispositivos de almacenamiento secundario",
+        "Dispositivos de entrada",
+        "Dispositivos de salida",
+        "Componentes del microprocesador"
+      ],
+      correcta: 1
+    },
+    {
+      id: 3,
+      nivel: "Básico",
+      pregunta: "¿Qué característica distingue a la memoria RAM de la memoria ROM?",
+      opciones: [
+        "La RAM almacena información permanentemente y la ROM es volátil.",
+        "La RAM conserva los datos mientras están en uso y es volátil, mientras que la ROM es de solo lectura y permanente.",
+        "La ROM solo se usa para guardar archivos de texto e imágenes.",
+        "No existe diferencia; ambas realizan la misma función en la tarjeta madre."
+      ],
+      correcta: 1
+    },
+    {
+      id: 4,
+      nivel: "Básico",
+      pregunta: "¿Cuántos bits conforman un Byte en el sistema de almacenamiento informático?",
+      opciones: ["2 bits", "4 bits", "8 bits", "16 bits"],
+      correcta: 2
+    },
+    {
+      id: 5,
+      nivel: "Básico",
+      pregunta: "¿Qué es Internet?",
+      opciones: [
+        "Un programa de diseño gráfico instalado en la computadora.",
+        "Una red global de redes informáticas interconectadas que comparten protocolos de comunicación.",
+        "Un sitio web para la gestión de documentos impresos.",
+        "Un navegador exclusivo para el sistema operativo Windows."
+      ],
+      correcta: 1
+    },
+    {
+      id: 6,
+      nivel: "Básico",
+      pregunta: "¿Cómo se denomina al programa o software que permite a los usuarios visualizar y navegar por las páginas web en Internet?",
+      opciones: [
+        "Servidor web",
+        "Navegador o explorador web",
+        "Buscador o motor de búsqueda",
+        "Sistema operativo"
+      ],
+      correcta: 1
+    },
+    {
+      id: 7,
+      nivel: "Básico",
+      pregunta: "Un programa o sitio en la web cuya función principal es clasificar, catalogar e indizar páginas para ofrecer resultados cuando el usuario introduce palabras clave se llama:",
+      opciones: [
+        "Navegador web",
+        "Cliente FTP",
+        "Buscador o motor de búsqueda",
+        "Procesador de texto"
+      ],
+      correcta: 2
+    },
+    {
+      id: 8,
+      nivel: "Básico",
+      pregunta: "¿Qué es una dirección IP?",
+      opciones: [
+        "La dirección física del domicilio donde se compra la computadora.",
+        "Una etiqueta numérica única y lógica que identifica a un dispositivo conectado en una red que utiliza el protocolo IP.",
+        "El nombre comercial de una página web terminado en .com.",
+        "Una clave de seguridad para iniciar sesión en el correo electrónico."
+      ],
+      correcta: 1
+    },
+    {
+      id: 9,
+      nivel: "Básico",
+      pregunta: "En la dirección http://www.ejemplo.com, la sección .com representa:",
+      opciones: [
+        "La dirección IP del cliente.",
+        "El tipo de organización o dominio de primer nivel (comercial).",
+        "El nombre del navegador utilizado.",
+        "El protocolo de transferencia de archivos."
+      ],
+      correcta: 1
+    },
+    {
+      id: 10,
+      nivel: "Básico",
+      pregunta: "En el modelo cliente-servidor de Internet, ¿cuál es el rol de la máquina “cliente”?",
+      opciones: [
+        "Almacenar las bases de datos de todos los sitios web del mundo.",
+        "Conectarse al servidor para realizar una consulta o petición y recibir la respuesta que mostrará al usuario.",
+        "Asignar las direcciones IP fijas a los ruteadores globales.",
+        "Crear el código fuente de los lenguajes de programación."
+      ],
+      correcta: 1
+    },
+    {
+      id: 11,
+      nivel: "Intermedio",
+      pregunta: "Dentro de la Unidad Central de Procesamiento (CPU), ¿cuáles son las dos unidades fundamentales que ejecutan el control y las operaciones matemáticas/lógicas respectivamente?",
+      opciones: [
+        "Memoria RAM y Disco Duro",
+        "Unidad de Control (UC) y Unidad Aritmético Lógica (ALU)",
+        "Memoria ROM y Bus de Datos",
+        "Kernel y Monitor"
+      ],
+      correcta: 1
+    },
+    {
+      id: 12,
+      nivel: "Intermedio",
+      pregunta: "¿Cuál es el propósito principal de la memoria Caché en la computadora?",
+      opciones: [
+        "Guardar permanentemente las fotos y videos del usuario.",
+        "Almacenar una copia ultra rápida de los datos e instrucciones más frecuentemente usados por la CPU para reducir el tiempo de acceso a la RAM.",
+        "Controlar el movimiento del puntero del mouse en la pantalla.",
+        "Convertir el código binario en imágenes impresas."
+      ],
+      correcta: 1
+    },
+    {
+      id: 13,
+      nivel: "Intermedio",
+      pregunta: "En las unidades de medida de almacenamiento de información, ¿a cuánto equivale aproximadamente 1 Kilobyte (KB)?",
+      opciones: ["100 Bytes", "1000 Bits", "1024 Bytes", "1048576 Megabytes"],
+      correcta: 2
+    },
+    {
+      id: 14,
+      nivel: "Intermedio",
+      pregunta: "¿Qué es el “Kernel” dentro de un sistema operativo?",
+      opciones: [
+        "El navegador predeterminado para conectarse a Internet.",
+        "El programa núcleo maestro que se carga en la memoria RAM al iniciar el sistema y administra los recursos de hardware y software.",
+        "Un dispositivo periférico de entrada visual.",
+        "Una marca comercial de discos duros magnéticos."
+      ],
+      correcta: 1
+    },
+    {
+      id: 15,
+      nivel: "Intermedio",
+      pregunta: "¿Qué componente electrónico caracterizó la construcción de las computadoras de la Tercera Generación (1964)?",
+      opciones: [
+        "Tubos de vacío",
+        "Transistores",
+        "Circuitos integrados (chips de silicio)",
+        "Microprocesadores de alta densidad"
+      ],
+      correcta: 2
+    },
+    {
+      id: 16,
+      nivel: "Intermedio",
+      pregunta: "¿Qué significan las siglas del protocolo TCP/IP, fundamental para las comunicaciones en Internet?",
+      opciones: [
+        "Technical Computer Protocol / Internet Program",
+        "Transmission Control Protocol / Internet Protocol",
+        "Transfer Data Center / IP Address",
+        "Telecommunication Control Provider / Internet Path"
+      ],
+      correcta: 1
+    },
+    {
+      id: 17,
+      nivel: "Intermedio",
+      pregunta: "¿Cuál es la función principal del protocolo HTTP (HyperText Transfer Protocol)?",
+      opciones: [
+        "Diseñar la estructura visual de las páginas mediante etiquetas.",
+        "Permitir el intercambio y la transferencia de archivos hipertextuales entre el servidor web y el navegador cliente.",
+        "Asignar nombres a los equipos dentro de una red local.",
+        "Cifrar correos electrónicos para que nadie los lea."
+      ],
+      correcta: 1
+    },
+    {
+      id: 18,
+      nivel: "Intermedio",
+      pregunta: "¿Cuál es la función del Sistema de Nombres de Dominio (DNS)?",
+      opciones: [
+        "Traducir nombres de dominios fáciles de recordar (como www.hola.com) a sus respectivas direcciones IP numéricas.",
+        "Limpiar los archivos temporales y virus de la memoria RAM.",
+        "Aumentar la velocidad del procesador mediante impulsos eléctricos.",
+        "Conectar teclados y ratones inalámbricos a la computadora."
+      ],
+      correcta: 0
+    },
+    {
+      id: 19,
+      nivel: "Intermedio",
+      pregunta: "¿A qué tipo de entidad corresponde comúnmente un nombre de dominio que termina con la extensión .edu?",
+      opciones: [
+        "Una empresa comercial internacional",
+        "Una organización sin fines de lucro",
+        "Una institución educativa",
+        "Una dependencia del gobierno de un país"
+      ],
+      correcta: 2
+    },
+    {
+      id: 20,
+      nivel: "Intermedio",
+      pregunta: "¿En qué se diferencia un “índice de búsqueda” de un “motor de búsqueda”?",
+      opciones: [
+        "El índice utiliza un programa llamado araña para rastrear la web, mientras que el motor es elaborado por una sola computadora.",
+        "En el índice de búsqueda la base de datos es organizada por un equipo humano por categorías, mientras que en el motor de búsqueda un programa (“araña” o “robot”) recorre la web e indiza las palabras clave.",
+        "El motor de búsqueda requiere pagar una suscripción y el índice es completamente gratuito.",
+        "No hay diferencia; ambos funcionan exactamente igual."
+      ],
+      correcta: 1
+    },
+    {
+      id: 21,
+      nivel: "Avanzado",
+      pregunta: "Cuando un usuario teclea una dirección URL en el navegador, ¿cómo se realiza la consulta en la jerarquía del servidor DNS?",
+      opciones: [
+        "El navegador consulta directamente al servidor de la página sin pasar por ningún filtro.",
+        "La petición se dirige al DNS de nivel principal (ej. .es o .com) y de ahí desciende en la jerarquía de subdominios hasta encontrar la IP exacta del servidor correspondiente.",
+        "El procesador traduce el texto a código ASCII y lo envía por el puerto del teclado.",
+        "La consulta se envía a todos los usuarios de la red local simultáneamente."
+      ],
+      correcta: 1
+    },
+    {
+      id: 22,
+      nivel: "Avanzado",
+      pregunta: "En la arquitectura de redes de Internet, ¿qué función cumple un “Ruteador” (Router)?",
+      opciones: [
+        "Mostrar el código HTML en la pantalla del monitor.",
+        "Conectar dos redes operando como puente y elegir la ruta óptima para transmitir los paquetes de datos de un nodo a otro.",
+        "Guardar permanentemente la memoria caché del navegador.",
+        "Generar claves de acceso para los servidores de correo SMTP."
+      ],
+      correcta: 1
+    },
+    {
+      id: 23,
+      nivel: "Avanzado",
+      pregunta: "¿Cuál es la diferencia entre una dirección IP fija (estática) y una dirección IP dinámica?",
+      opciones: [
+        "La IP fija cambia en cada sesión de conexión y la dinámica permanece inalterable para siempre.",
+        "La IP fija es asignada permanentemente a un servidor conectado continuamente, mientras que la dinámica la asigna de forma provisional el proveedor de Internet para una sesión específica.",
+        "La IP fija solo sirve para redes Wi-Fi y la dinámica solo para cables de fibra óptica.",
+        "La IP fija no utiliza números en sistema decimal."
+      ],
+      correcta: 1
+    },
+    {
+      id: 24,
+      nivel: "Avanzado",
+      pregunta: "Las unidades de discos duros convencionales y las memorias USB/Flash se clasifican técnicamente según sus tecnologías de almacenamiento como:",
+      opciones: [
+        "Magnético (discos duros) y Estado Sólido / Flash (memorias USB).",
+        "Óptico (ambos).",
+        "Solo de acceso aleatorio volátil.",
+        "Memorias de tubos de vacío y circuitos impresos."
+      ],
+      correcta: 0
+    },
+    {
+      id: 25,
+      nivel: "Avanzado",
+      pregunta: "Al cargar una página web, ¿por qué la segunda vez que se visita un mismo sitio suele cargar más rápido en el navegador?",
+      opciones: [
+        "Porque el servidor aumenta la velocidad de su procesador automáticamente.",
+        "Porque el navegador descarga y almacena previamente archivos del sitio (imágenes, scripts) en una carpeta temporal / Caché local en el equipo cliente.",
+        "Porque la memoria ROM borra el historial de navegación.",
+        "Porque el cable de fibra óptica se vuelve más ancho con el uso."
+      ],
+      correcta: 1
+    },
+    {
+      id: 26,
+      nivel: "Avanzado",
+      pregunta: "Dado que la computadora utiliza el sistema binario (base 2), ¿cuántos valores o combinaciones distintas se pueden representar utilizando un octeto (1 Byte = 8 bits)?",
+      opciones: ["8 valores", "64 valores", "256 valores (de 0 a 255)", "1024 valores"],
+      correcta: 2
+    },
+    {
+      id: 27,
+      nivel: "Avanzado",
+      pregunta: "En el servicio de correo electrónico, ¿qué protocolo se utiliza habitualmente para el ENVÍO de mensajes entre servidores y cuál para la DESCARGA en el equipo receptor?",
+      opciones: [
+        "HTTP para envío y HTML para descarga.",
+        "SMTP para envío y POP3 para la descarga/recepción.",
+        "DNS para envío y IP para descarga.",
+        "FTP para envío y URL para descarga."
+      ],
+      correcta: 1
+    },
+    {
+      id: 28,
+      nivel: "Avanzado",
+      pregunta: "En la transmisión de audio y video por Streaming, ¿qué función cumple el “Buffer”?",
+      opciones: [
+        "Eliminar los anuncios publicitarios del servidor remoto.",
+        "Construir un almacén temporal de datos en el cliente para que el reproductor comience la reproducción continua mientras el resto del archivo se sigue descargando en segundo plano.",
+        "Convertir el archivo de sonido a formato de texto plano.",
+        "Cambiar la dirección IP del usuario mientras ve el video."
+      ],
+      correcta: 1
+    },
+    {
+      id: 29,
+      nivel: "Avanzado",
+      pregunta: "¿Qué protocolo criptográfico y de transporte seguro utiliza un navegador cuando la dirección de la página web inicia con https://?",
+      opciones: [
+        "Protocolo POP3 con FTP",
+        "Protocolo HTTPS apoyado en capas de seguridad SSL/TLS para cifrar el intercambio de datos",
+        "Protocolo ASCII con firmas de virus",
+        "Protocolo HTML simple sin encriptación"
+      ],
+      correcta: 1
+    },
+    {
+      id: 30,
+      nivel: "Avanzado",
+      pregunta: "En la protección de información transmitida por Internet, ¿en qué consiste el sistema de cifrado asimétrico?",
+      opciones: [
+        "En utilizar una sola clave que se comparte públicamente por correo electrónico.",
+        "En utilizar un par de claves coordinadas matemáticamente: una clave pública (para cifrar) y una clave privada (que solo conoce el dueño para descifrar).",
+        "En convertir todo el texto a mayúsculas para evitar el fraude.",
+        "En cambiar la clave de la red Wi-Fi cada 10 minutos automáticamente."
+      ],
+      correcta: 1
+    }
+  ];
+
+  const TOTAL = 10;
+  const clasesNivel = { "Básico": "basico", "Intermedio": "intermedio", "Avanzado": "avanzado" };
+  const vistas = {
+    inicio: document.getElementById("vista-inicio"),
+    examen: document.getElementById("vista-examen"),
+    resultado: document.getElementById("vista-resultado")
+  };
+  const formInicio = document.getElementById("form-inicio");
+  const inputNombre = document.getElementById("nombre");
+  const errorNombre = document.getElementById("nombre-error");
+  const formExamen = document.getElementById("form-examen");
+  const contenedorPreguntas = document.getElementById("preguntas");
+  const barra = document.getElementById("barra");
+  const barraRelleno = document.getElementById("barra-relleno");
+  const contador = document.getElementById("contador");
+  const ayuda = document.getElementById("ayuda");
+  const btnEntregar = document.getElementById("btn-entregar");
+  const reloj = document.getElementById("reloj");
+  const resultadoCard = document.getElementById("resultado-card");
+  const anillo = document.getElementById("anillo");
+  const puntaje = document.getElementById("puntaje");
+  const estadoTexto = document.getElementById("estado");
+  const resultadoNombre = document.getElementById("resultado-nombre");
+  const datoAciertos = document.getElementById("dato-aciertos");
+  const datoTiempo = document.getElementById("dato-tiempo");
+  const resultadoMensaje = document.getElementById("resultado-mensaje");
+  const resultadoDetalle = document.getElementById("resultado-detalle");
+  const btnReintentar = document.getElementById("btn-reintentar");
+  const btnInicio = document.getElementById("btn-inicio");
+
+  let estado = null;
+  let firmaAnterior = "";
+
+  function mezclar(lista) {
+    const copia = lista.slice();
+    for (let i = copia.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temporal = copia[i];
+      copia[i] = copia[j];
+      copia[j] = temporal;
+    }
+    return copia;
+  }
+
+  function crearSeleccion() {
+    let seleccion;
+    let firma;
+    let intentos = 0;
+    do {
+      seleccion = mezclar(banco).slice(0, TOTAL);
+      firma = seleccion.map(function (p) { return p.id; }).sort(function (a, b) { return a - b; }).join("-");
+      intentos++;
+    } while (firma === firmaAnterior && intentos < 25);
+    firmaAnterior = firma;
+
+    return seleccion.map(function (p) {
+      const opciones = p.opciones.map(function (texto, indice) {
+        return { texto: texto, correcta: indice === p.correcta };
+      });
+      return {
+        id: p.id,
+        nivel: p.nivel,
+        pregunta: p.pregunta,
+        opciones: mezclar(opciones)
+      };
+    });
+  }
+
+  function mostrarVista(nombre) {
+    Object.keys(vistas).forEach(function (clave) {
+      vistas[clave].hidden = clave !== nombre;
+    });
+  }
+
+  function formatearTiempo(segundos) {
+    const minutos = Math.floor(segundos / 60);
+    const resto = segundos % 60;
+    return String(minutos).padStart(2, "0") + ":" + String(resto).padStart(2, "0");
+  }
+
+  function actualizarReloj() {
+    if (!estado) return;
+    estado.segundos = Math.floor((Date.now() - estado.inicio) / 1000);
+    reloj.textContent = formatearTiempo(estado.segundos);
+  }
+
+  function renderPreguntas(preguntas) {
+    contenedorPreguntas.innerHTML = preguntas.map(function (p, indice) {
+      const opciones = p.opciones.map(function (opcion, posicion) {
+        const letra = String.fromCharCode(65 + posicion);
+        return '<label class="opt">' +
+          '<input type="radio" name="q' + indice + '" value="' + posicion + '" />' +
+          '<span class="letra" aria-hidden="true">' + letra + '</span>' +
+          '<span class="opt-texto">' + opcion.texto + '</span>' +
+        '</label>';
+      }).join("");
+
+      return '<fieldset class="q">' +
+        '<legend class="sr-only">Pregunta ' + (indice + 1) + '</legend>' +
+        '<div class="q-top">' +
+          '<span class="q-num">' + String(indice + 1).padStart(2, "0") + '</span>' +
+          '<span class="q-level level-' + (clasesNivel[p.nivel] || "basico") + '">' + p.nivel + '</span>' +
+        '</div>' +
+        '<p class="q-text">' + p.pregunta + '</p>' +
+        '<div class="opciones">' + opciones + '</div>' +
+      '</fieldset>';
+    }).join("");
+  }
+
+  function contarRespondidas() {
+    return formExamen.querySelectorAll('input[type="radio"]:checked').length;
+  }
+
+  function actualizarProgreso() {
+    const respondidas = contarRespondidas();
+    barraRelleno.style.width = (respondidas / TOTAL * 100) + "%";
+    barra.setAttribute("aria-valuenow", String(respondidas));
+    contador.textContent = respondidas + " de " + TOTAL;
+
+    if (respondidas === TOTAL) {
+      ayuda.textContent = "Todo listo. Revisa tus respuestas antes de entregar.";
+    } else {
+      const faltan = TOTAL - respondidas;
+      ayuda.textContent = faltan === 1
+        ? "Falta 1 pregunta por responder para poder entregar."
+        : "Faltan " + faltan + " preguntas por responder para poder entregar.";
+    }
+
+    btnEntregar.disabled = respondidas < TOTAL || !estado || estado.entregado;
+  }
+
+  function iniciarExamen(nombre) {
+    if (estado && estado.relojId) {
+      clearInterval(estado.relojId);
+    }
+
+    const preguntas = crearSeleccion();
+    estado = {
+      alumno: nombre,
+      preguntas: preguntas,
+      inicio: Date.now(),
+      segundos: 0,
+      relojId: null,
+      entregado: false
+    };
+
+    document.getElementById("alumno-nombre").textContent = nombre;
+    renderPreguntas(preguntas);
+    reloj.textContent = "00:00";
+    actualizarProgreso();
+    mostrarVista("examen");
+    window.scrollTo(0, 0);
+
+    actualizarReloj();
+    estado.relojId = setInterval(actualizarReloj, 1000);
+
+    requestAnimationFrame(function () {
+      document.getElementById("examen-titulo").focus({ preventScroll: true });
+    });
+  }
+
+  function mostrarResultado(aciertos, segundos) {
+    const aprobado = aciertos === TOTAL;
+    const tarjeta = resultadoCard;
+
+    tarjeta.classList.toggle("pass", aprobado);
+    tarjeta.classList.toggle("fail", !aprobado);
+
+    anillo.style.setProperty("--p", String(aciertos * 10));
+    puntaje.textContent = String(aciertos);
+    estadoTexto.textContent = aprobado ? "Aprobado" : "Reprobado";
+    document.getElementById("resultado-titulo").textContent = aprobado ? "¡Felicidades!" : "Examen no aprobado";
+    resultadoNombre.textContent = "Alumno: " + estado.alumno;
+    datoAciertos.textContent = aciertos + " / " + TOTAL;
+    datoTiempo.textContent = formatearTiempo(segundos);
+
+    if (aprobado) {
+      resultadoMensaje.textContent = "Contestaste correctamente las 10 preguntas de la selección.";
+      resultadoDetalle.textContent = "Puedes realizar otro examen con una nueva selección aleatoria de preguntas.";
+      btnReintentar.textContent = "Hacer otro examen";
+    } else {
+      resultadoMensaje.textContent = "Obtuviste " + aciertos + " de " + TOTAL + " respuestas correctas. Necesitas acertar las 10.";
+      resultadoDetalle.textContent = "Al intentar de nuevo se generará una selección distinta de 10 preguntas.";
+      btnReintentar.textContent = "Intentar con 10 nuevas";
+    }
+
+    mostrarVista("resultado");
+    window.scrollTo(0, 0);
+
+    requestAnimationFrame(function () {
+      document.getElementById("resultado-titulo").focus({ preventScroll: true });
+    });
+  }
+
+  formInicio.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+    const nombre = inputNombre.value.trim().replace(/\s+/g, " ");
+    if (!nombre) {
+      errorNombre.hidden = false;
+      inputNombre.focus();
+      return;
+    }
+    errorNombre.hidden = true;
+    iniciarExamen(nombre);
+  });
+
+  inputNombre.addEventListener("input", function () {
+    if (!errorNombre.hidden && inputNombre.value.trim()) {
+      errorNombre.hidden = true;
+    }
+  });
+
+  formExamen.addEventListener("change", function (evento) {
+    const objetivo = evento.target;
+    if (!objetivo.matches('input[type="radio"]')) return;
+
+    const fieldset = objetivo.closest(".q");
+    fieldset.querySelectorAll(".opt").forEach(function (etiqueta) {
+      etiqueta.classList.remove("is-selected");
+    });
+    const etiquetaElegida = objetivo.closest(".opt");
+    if (etiquetaElegida) etiquetaElegida.classList.add("is-selected");
+
+    actualizarProgreso();
+  });
+
+  formExamen.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+    if (!estado || estado.entregado) return;
+    if (contarRespondidas() < TOTAL) return;
+
+    estado.entregado = true;
+    btnEntregar.disabled = true;
+
+    let aciertos = 0;
+    estado.preguntas.forEach(function (pregunta, indice) {
+      const elegida = formExamen.querySelector('input[name="q' + indice + '"]:checked');
+      if (!elegida) return;
+      const opcion = pregunta.opciones[Number(elegida.value)];
+      if (opcion && opcion.correcta) aciertos++;
+    });
+
+    if (estado.relojId) {
+      clearInterval(estado.relojId);
+      estado.relojId = null;
+    }
+
+    const segundosFinales = Math.floor((Date.now() - estado.inicio) / 1000);
+    mostrarResultado(aciertos, segundosFinales);
+  });
+
+  btnReintentar.addEventListener("click", function () {
+    if (!estado) return;
+    iniciarExamen(estado.alumno);
+  });
+
+  btnInicio.addEventListener("click", function () {
+    if (estado && estado.relojId) {
+      clearInterval(estado.relojId);
+      estado.relojId = null;
+    }
+    mostrarVista("inicio");
+    inputNombre.value = estado ? estado.alumno : "";
+    inputNombre.focus();
+    window.scrollTo(0, 0);
+  });
+
+  inputNombre.focus();
+</script>
+</body>
+</html>
